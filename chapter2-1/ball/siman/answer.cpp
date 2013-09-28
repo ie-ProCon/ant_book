@@ -4,31 +4,26 @@
 using namespace std;
 
 int ball_list[10];
-int right_list[10];
-int left_list[10];
+int right_val;      
+int left_val;
 
 bool flag;
 
 void dfs(int right, int left){
   int count = right + left;
+  int num = ball_list[count];
+
+  if(flag) return;
 
   if(count == 10){
     flag = true;
   }else{
-    if(right == 0 || right_list[right-1] < ball_list[count]){
-      if(right == 0){
-        right_list[0] = ball_list[count];
-      }else{
-        right_list[right] = ball_list[count];
-      }
+    if(right_val < ball_list[count]){
+      right_val = num;
       dfs(right+1, left);
     }
-    if(left == 0 || left_list[left-1] < ball_list[count]){
-      if(left == 0){
-        left_list[0] = ball_list[count];
-      }else{
-        left_list[left] = ball_list[count];
-      }
+    if(left_val < ball_list[count]){
+      left_val = num;
       dfs(right, left+1);
     }
   }
@@ -41,8 +36,8 @@ int main(){
 
   for(int i = 0; i < n; i++){
     flag = false;
-    memset(right_list, 0, sizeof(right_list));
-    memset(left_list, 0, sizeof(left_list));
+    right_val = 0;
+    left_val = 0;
 
     for(int j = 0; j < 10; j++){
       cin >> ball_list[j];
@@ -50,11 +45,7 @@ int main(){
     
     dfs(0, 0);
 
-    if(flag){
-      cout << "YES" << endl;
-    }else{
-      cout << "NO" << endl;
-    }
+    cout << ((flag)? "YES" : "NO") << endl;
   }
 
   return 0;
