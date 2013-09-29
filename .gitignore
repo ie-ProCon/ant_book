@@ -1,3 +1,5 @@
 # dust file
 *.*~
 *~
+*.out
+.DS_Store
