@@ -56,8 +56,8 @@ void solve(void) {
 // impossible is INF
 int get_answer(void) {
     std::queue<std::pair<int, int> > que;
-    const size_t N = maze_field.size();
-    const size_t M = maze_field[0].size();
+    const size_t y_max = maze_field.size();
+    const size_t x_max = maze_field[0].size();
     que.push(std::pair<int, int>(sx, sy)); 
     distance_field[sy][sx] = 0;
     while (que.size()) {
@@ -69,8 +69,8 @@ int get_answer(void) {
         for (int i = 0; i < 4; i++) {
             int x_next = pair.first + dx[i];
             int y_next = pair.second + dy[i]; 
-            bool x_inside = (0 <= x_next) && (x_next < N);
-            bool y_inside = (0 <= y_next) && (y_next < M);
+            bool x_inside = (0 <= x_next) && (x_next < x_max);
+            bool y_inside = (0 <= y_next) && (y_next < y_max);
             if (!x_inside || !y_inside) {
                 continue; 
             }
@@ -143,8 +143,8 @@ std::vector<std::string> read_file(const std::string filename) {
 template<typename T> void show_input(const std::vector<T>& data) {
     size_t N = data.size();
     size_t M = data[0].size();
-    std::cout << "N = " << N << "\n";
-    std::cout << "M = " << M << "\n";
+    std::cout << "M = X_MAX = " << M << "\n";
+    std::cout << "N = Y_MAX = " << N << "\n";
     std::cout << "START = (" << sx << "," << sy << ")\n";
     std::cout << "GOAL  = (" << gx << "," << gy << ")\n";
     for (size_t i = 0; i < N; i++) {
