@@ -10,35 +10,36 @@
 double get_dtime(void);
 std::vector<std::string> read_file(const std::string filename); 
 template<typename T> void show_input(const std::vector<T>& data);
-std::vector<char> string2charvector(const std::string& str);
-std::string cin_line();
 void solve(void);
-void init_maze(std::vector<std::string> input_lines);
-void init_distance_field(void);
+std::vector<std::vector<char> > get_maze(std::vector<std::string> input_lines);
+void init_distance_field(std::vector<std::vector<char> > maze);
 int get_answer(void);
+std::vector<char> string2charvector(const std::string& str);
 
 const int INF = 1000000000;
 const char START_CHAR = 'S';
 const char GOAL_CHAR  = 'G';
-//typedef std::pair<int, int> P;
+const char WALL_CHAR  = '#';
+const int WALL  = -1;
+const int START = 0;
 const int dx[4] = {1, 0, -1, 0}; 
 const int dy[4] = {0, 1, 0, -1}; 
 
-int sx, sy;
-int gx, gy;
-std::vector<std::vector<char> > maze_field;
+//int sx, sy;
+//int gx, gy;
+std::pair<int, int> start;
+std::pair<int, int> goal;
 std::vector<std::vector<int> >  distance_field;
 
 int main(int argc, char* argv[]) {
     const std::string filename = argv[1];
     std::vector<std::string> str_vec = read_file(filename);
-    init_maze(str_vec);
-    init_distance_field();
+    std::vector<std::vector<char> > maze = get_maze(str_vec);
+    init_distance_field(maze);
     show_input(str_vec);
     solve();
     return 0;
 }
-
 
 void solve(void) {
     double s = 0;
@@ -53,32 +54,38 @@ void solve(void) {
 }
 
 // (sx, sy) -> (gx, gy)
-// impossible is INF
+// if impossible, return INF
 int get_answer(void) {
     std::queue<std::pair<int, int> > que;
-    const size_t y_max = maze_field.size();
-    const size_t x_max = maze_field[0].size();
-    que.push(std::pair<int, int>(sx, sy)); 
-    distance_field[sy][sx] = 0;
+    que.push(start);
+    const size_t y_max = distance_field.size();
+    const size_t x_max = distance_field[0].size();
+    const int sx = start.first;
+    const int sy = start.second;
+    const int gx = goal.first;
+    const int gy = goal.second;
     while (que.size()) {
-        std::pair<int, int> pair = que.front(); 
+        std::pair<int, int> cur_pos = que.front(); 
         que.pop();
-        if (pair.first == gx && pair.second == gy) {
+        int cx = cur_pos.first;
+        int cy = cur_pos.second;
+        if (cx == gx && cy == gy) {
             break; 
         }
         for (int i = 0; i < 4; i++) {
-            int x_next = pair.first + dx[i];
-            int y_next = pair.second + dy[i]; 
+            int x_next = cur_pos.first + dx[i];
+            int y_next = cur_pos.second + dy[i]; 
             bool x_inside = (0 <= x_next) && (x_next < x_max);
             bool y_inside = (0 <= y_next) && (y_next < y_max);
             if (!x_inside || !y_inside) {
                 continue; 
             }
-            bool not_wall = maze_field[y_next][x_next] != '#';
+            bool not_wall = distance_field[y_next][x_next] != WALL;
             bool yet_visited = distance_field[y_next][x_next] == INF;
             if (not_wall && yet_visited) {
-                que.push(std::pair<int, int>(x_next, y_next)); 
-                int prev_distance = distance_field[pair.second][pair.first]; 
+                std::pair<int, int> next_pos = std::pair<int, int>(x_next, y_next);
+                que.push(next_pos); 
+                int prev_distance = distance_field[cur_pos.second][cur_pos.first]; 
                 distance_field[y_next][x_next] = prev_distance + 1;
             }
         }
@@ -87,34 +94,40 @@ int get_answer(void) {
     return ans;
 }
 
-void init_distance_field(void) {
-    size_t y_max = maze_field.size();
-    size_t x_max = maze_field[0].size();
+void init_distance_field(std::vector<std::vector<char> > maze) {
+    size_t y_max = maze.size();
+    size_t x_max = maze[0].size();
     for (int y = 0; y < y_max; y++) {
         std::vector<int> row;
         for (int x = 0; x < x_max; x++) {
-            row.push_back(INF);
-            char c = maze_field[y][x];
+            char c = maze[y][x];
+            if (c == WALL_CHAR) {
+                row.push_back(WALL);
+                continue; 
+            }
             if (c == START_CHAR) {
-                sx = x;
-                sy = y;
+                start = std::pair<int, int>(x, y);
+                row.push_back(START);
+                continue;
             }
             if (c == GOAL_CHAR) {
-                gx = x;
-                gy = y;
+                goal = std::pair<int, int>(x, y);
             }
+            row.push_back(INF);
         }
         distance_field.push_back(row);
     }
 }
 
-void init_maze(std::vector<std::string> input_lines) {
+std::vector<std::vector<char> > get_maze(std::vector<std::string> input_lines) {
+    std::vector<std::vector<char> > maze_field;
     std::vector<std::string>::iterator itr = input_lines.begin();
     while (itr != input_lines.end()) {
         std::vector<char> char_vec = string2charvector(*itr);
         maze_field.push_back(char_vec);
         itr++; 
     }
+    return maze_field;
 }
 
 double get_dtime(void) {
@@ -145,8 +158,8 @@ template<typename T> void show_input(const std::vector<T>& data) {
     size_t M = data[0].size();
     std::cout << "M = X_MAX = " << M << "\n";
     std::cout << "N = Y_MAX = " << N << "\n";
-    std::cout << "START = (" << sx << "," << sy << ")\n";
-    std::cout << "GOAL  = (" << gx << "," << gy << ")\n";
+    std::cout << "START = (" << start.first << "," << start.second << ")\n";
+    std::cout << "GOAL  = (" << goal.first << "," << goal.second << ")\n";
     for (size_t i = 0; i < N; i++) {
         std::cout << data[i] << "\n";
     }
