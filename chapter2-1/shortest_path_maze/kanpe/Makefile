@@ -10,6 +10,9 @@ all:
 test0:
 	./a.out sample0
 
+test1:
+	./a.out sample1
+
 clean:
 	rm ./a.out
 
