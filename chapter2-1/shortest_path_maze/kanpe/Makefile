@@ -13,6 +13,9 @@ test0:
 test1:
 	./a.out sample1
 
+test2:
+	./a.out sample2
+
 clean:
 	rm ./a.out
 
