@@ -73,21 +73,12 @@ int get_ans(std::vector<std::vector<char> >& field) {
 
 std::vector<std::vector<char> > init_field(const int height, const int width) {
     std::vector<std::vector<char> > field(height);
-    for (int i = 0; i < height; i++) {
-        std::vector<char> row = get_char_vec(width);
-        field[i] = row;
+    for (int y = 0; y < height; y++) {
+        std::vector<char> row(width);
+        for (int x = 0; x < width; x++) {
+            std::cin >> row[x];
+        }
+        field[y] = row;
     }
     return field;
 }
-
-std::vector<char> get_char_vec(const int width) {
-    std::vector<char> ret_vec(width);
-    char str[width]; 
-    std::cin >> str;
-    for (int i = 0; i < width; i++) {
-        ret_vec[i] = str[i];
-    } 
-    return ret_vec;
-}
-
-
