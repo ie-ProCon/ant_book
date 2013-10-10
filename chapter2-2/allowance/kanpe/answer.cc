@@ -61,8 +61,7 @@ int pay_larger(int rest_payment, int index) {
     int value = money[index].first;
     int num   = money[index].second;
     if (value<=rest_payment && 0<num) {
-        int divided = rest_payment / value;
-        int pay_num = (num < divided)? num : divided;
+        int pay_num = std::min(num, rest_payment/value);
 
         money[index].second -= pay_num;
         rest_payment        -= value * pay_num;
