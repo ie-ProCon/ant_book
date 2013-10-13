@@ -10,21 +10,29 @@
 
 ### ディレクトリ構成
 
-ant_book - ルートディレクトリ
+`ant_book`/`chapter`/`problem`/`user_name`/answer.cpp
 
-charpter - 章ごとのディレクトリ
+ * ant_book - ルートディレクトリ
 
-problem - 章ごとに用意されている問題
+ * charpter - 章ごとのディレクトリ
 
-<br />
+ * problem - 章ごとに用意されている問題
+
+ * user_name - 解く人の名前
 
 #### 例
+`siman` が `chapter2-1` の `ball問題` を解いた場合
 
-ant\_book/chapter/problem/user\_name/answer.cpp
+`ant_book/chapter2-1/ball/siman/answer.cpp`
 
-simanがchapter2-1のball問題を解いた場合
-
-ant\_book/chapter2-1/ball/siman/answer.cpp
+tree構造的には
+```
+ant_book
+├── chapter2-1
+│   ├── ball
+│   │   └── siman
+│   │       ├── answer.cpp
+```
 
 ***
 
