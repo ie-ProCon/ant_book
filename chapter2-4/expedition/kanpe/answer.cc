@@ -7,7 +7,7 @@ int  get_ans(void);
 
 typedef int Distance;
 typedef int Amount;
-typedef std::pair<Distance, Distance> DAPair;
+typedef std::pair<Distance, Amount> DAPair;
 
 int N;
 int L;
