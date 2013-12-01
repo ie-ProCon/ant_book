@@ -22,7 +22,12 @@ int main(int argc, char const* argv[]) {
     std::cin >> a >> b;
 
     int x, y;
-    extgcd(4, 11, x, y);;
+    int d = extgcd(4, 11, x, y);;
+
+    if (d != 1) {
+        std::cout << -1 << std::endl;
+        return 0;
+    }
 
     if (x > 0) {
         std::cout << x << " " << 0 << " ";
