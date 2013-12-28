@@ -40,7 +40,7 @@ int solve(int n, int k) {
     int lower_bound = 0;
     int middle = (upper_bound + lower_bound) / 2;
 
-    for (int i = 0; i < 100; i++) {
+    while (upper_bound - lower_bound > 1) {
         middle = (upper_bound + lower_bound) / 2;
         if (numbers[middle] < k) {
             lower_bound = middle;
